@@ -114,6 +114,11 @@ export default {
 }
 </script>
 
+<style scoped>
+  @import 'vue-material/dist/vue-material.min.css';
+  @import 'vue-material/dist/theme/default.css';
+</style>
+
 <style lang="css" scoped>
   .md-app {
     min-height: 350px;

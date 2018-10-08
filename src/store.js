@@ -49,9 +49,10 @@ const initialState = () => ({
         },
         displayImageFile: "",
         content: "",
-        timestamp: ""
+        timestamp: "",
+        id: ""
     },
-    singlePost: {}
+    singlePost: null
 })
 const getters = {
     allPostsReversed: state => {
@@ -199,6 +200,7 @@ const actions = {
                 displayImageRef.child(newPost.id).getDownloadURL().then(url => {
                     fullPost.displayImageURL = url
                     if (!!newPost.updated) dispatch('checkIfPostIsNew', fullPost)
+                    else if (newPost.singlePost) commit('addSinglePostToState', fullPost)
                     else commit('addFullPostToState', {fullPost, unshift: false})
                 }, error => {console.log(error)})
             })
@@ -266,6 +268,12 @@ const mutations = {
     },
     deleteFullPostToState(state, index) {
         state.allPosts.slice(index, 1)
+    },
+    addSinglePostToState(state, fullPost) {
+        state.singlePost = fullPost
+    },
+    removeSinglePost(state) {
+        state.singlePost = null
     }
 }
 
