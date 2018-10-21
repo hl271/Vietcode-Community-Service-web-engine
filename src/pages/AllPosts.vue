@@ -2,7 +2,7 @@
     <div class="container" id="posts-section">
         <h1>Tất cả bài viết</h1>
         <div class="posts-list">
-            <div class="post-wrapper" v-if="allPosts.length > 0" v-for="post in allPosts">
+            <div class="post-wrapper" v-if="allPosts.length > 0" v-for="post in allPosts" :key="post.id">
                 <div class="post-image">
                     <img class="display-photo" :src="post.displayImageURL">
                 </div>

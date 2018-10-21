@@ -57,10 +57,12 @@
 
       <md-app-content>
           <div id="app-content">
-            <admin-blog-list v-if="show.allBlogPosts"></admin-blog-list>
-            <div v-if="show.allAdminRequests">
-                <h2>All Admin Requests</h2>
-            </div>
+            <keep-alive>
+              <admin-blog-list v-if="show.allBlogPosts"></admin-blog-list>
+            </keep-alive>
+            <keep-alive>
+              <admin-request-list v-if="show.allAdminRequests"></admin-request-list>
+            </keep-alive>
             <create-new-post v-if="show.createNewPost"></create-new-post>
           </div>        
       </md-app-content>
@@ -73,11 +75,13 @@ import fb from '../../firebase'
 import Editor from '@tinymce/tinymce-vue'
 import CreateNewPost from '@/components/admin/CreateNewPost'
 import AdminBlogList from '@/components/admin/AdminBlogList'
+import AdminRequestList from '@/components/admin/AdminRequestList'
 export default {
     components: {
         'editor': Editor,
         'create-new-post': CreateNewPost,
-        'admin-blog-list': AdminBlogList
+        'admin-blog-list': AdminBlogList,
+        'admin-request-list': AdminRequestList
     },
     data: () => ({
         menuVisible: false,
@@ -115,8 +119,8 @@ export default {
 </script>
 
 <style scoped>
-  @import 'vue-material/dist/vue-material.min.css';
-  @import 'vue-material/dist/theme/default.css';
+  /* @import 'vue-material/dist/vue-material.min.css';
+  @import 'vue-material/dist/theme/default.css'; */
 </style>
 
 <style lang="css" scoped>

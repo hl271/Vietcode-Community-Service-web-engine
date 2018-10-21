@@ -52,7 +52,9 @@ const initialState = () => ({
         timestamp: "",
         id: ""
     },
-    singlePost: null
+    editingPost: null,
+    singlePost: null,
+    allAdminRequests: []
 })
 const getters = {
     allPostsReversed: state => {
@@ -274,6 +276,24 @@ const mutations = {
     },
     removeSinglePost(state) {
         state.singlePost = null
+    },
+    addAdminRequestToState(state, request) {
+        state.allAdminRequests.push(request)
+    },
+    addEditingPostToState(state, post) {
+        state.editingPost = post
+    },
+    deleteEditingPostFromState(state) {
+        state.editingPost = null
+    },
+    updateEditingPostContent(state, value) {
+        state.editingPost.content = value
+    },
+    updateEditingPostShortDescription(state, value) {
+        state.editingPost.info.short_description = value
+    },
+    updateEditingPostTitle(state, value) {
+        state.editingPost.info.title = value
     }
 }
 
