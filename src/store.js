@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import fb from './firebase'
 
+// const API_URL = 'http://localhost:5000/vcswebdemo/us-central1/app'
+const API_URL = 'https://us-central1-vcswebdemo.cloudfunctions.net/app'
 Vue.use(Vuex)
 
 fb.auth().onAuthStateChanged(user => {
@@ -41,7 +43,11 @@ const initialState = () => ({
             error: null
         }
     },
-    allPosts: [],
+    lists: {
+        posts: [],
+        adminReqs: []
+    },
+    allPosts: {},
     newPost: {
         info: {
             title: "",
@@ -57,8 +63,15 @@ const initialState = () => ({
     allAdminRequests: []
 })
 const getters = {
-    allPostsReversed: state => {
-        return state.allPosts.reverse()
+    allPosts: state => {
+        let posts = []
+        state.lists.posts.forEach((postId, i) => {
+            if (postId in state.allPosts) {
+                let post = state.allPosts[postId]
+                posts.push(post)
+            }
+        })
+        return posts
     }
     
 }
@@ -182,7 +195,11 @@ const actions = {
         const displayImageRef = fb.storage().ref('display_images/')
     },
     addFullPost({commit, state, dispatch}, newPost) {
-        console.log('Adding full post by post id...')
+        console.log('Adding post id to state...')
+        if (!!newPost.updated) {
+            dispatch('checkIfPostIsNew', newPost.id)
+        }
+        else if (newPost.singlePost === undefined) commit('addPostIdToState', {postId: newPost.id, unshift: false})
         const postsContentRef = fb.db().ref('posts_content/')
         const displayImageRef = fb.storage().ref('display_images/')
         const postsInfoRef = fb.db().ref('posts_info/')
@@ -201,22 +218,52 @@ const actions = {
             }).then(() => {
                 displayImageRef.child(newPost.id).getDownloadURL().then(url => {
                     fullPost.displayImageURL = url
-                    if (!!newPost.updated) dispatch('checkIfPostIsNew', fullPost)
-                    else if (newPost.singlePost) commit('addSinglePostToState', fullPost)
-                    else commit('addFullPostToState', {fullPost, unshift: false})
+                    if (newPost.singlePost) commit('addSinglePostToState', fullPost)
+                    else commit('addFullPostToState', fullPost)
                 }, error => {console.log(error)})
             })
         })
         
     },
-    checkIfPostIsNew({commit, state}, fullPost) {
-        state.allPosts.forEach((post, index) => {
-            if (post.id === fullPost.id) {
+    checkIfPostIsNew({commit, state}, postId) {
+        state.lists.posts.forEach((id, index) => {
+            if (id === postId) {
                 count++
-                commit('deleteFullPostToState', index)
+                commit('deleteFullPostToState', {index, id})
             }
         })
-        commit('addFullPostToState', {fullPost, unshift: true})
+        commit('addPostIdToState', {postId, unshift: true})
+    },
+    processImageOnServer({commit, state}, imageFile) {
+        console.log(imageFile)
+        let formData = new FormData()
+        formData.append('file', imageFile)
+        fetch( `${API_URL}/processImage`,
+            {
+                method: 'POST',
+                headers: {
+                    
+                },
+                body: formData
+            }
+        ).then(function(response){
+            console.log('SUCCESS!!');
+            let imageFile = new Buffer(response.data, 'binary')
+            commit('updateNewPostDisplayImage', imageFile)
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+    },
+    sendAcceptAdminRequest({commit}, id) {
+        axios.get(`${API_URL}/admin/approve/${id}`)
+                .then(res => {
+                    console.log('Admin Request Accepted: ' + id )
+                    commit('deleteAdminRequestFromState', id)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
     }
 }
 const mutations = {
@@ -258,18 +305,18 @@ const mutations = {
         state.newPost = reset.newPost
         state.uploadPostStatus = reset.uploadPostStatus
     },
-    addFullPostToState(state, {fullPost, unshift}) {
-        if (!!unshift) {
-            console.log('Unshift Post To All Posts')
-            state.allPosts.unshift(fullPost)
-        }
-        else {
-            console.log('Push Post To All Posts' + fullPost.timestamp)
-            state.allPosts.push(fullPost)
-        }
+    addPostIdToState(state, {postId, unshift}) {
+        if (!!unshift) state.lists.posts.unshift(postId)
+        else state.lists.posts.push(postId)
     },
-    deleteFullPostToState(state, index) {
-        state.allPosts.slice(index, 1)
+    addFullPostToState(state, fullPost) {
+        console.log('Add FULL PoST to state')
+        const postId = fullPost.id
+        Vue.set(state.allPosts, postId, fullPost)
+    },
+    deleteFullPostToState(state, {index, id}) {
+        delete state.allPosts[id]
+        state.lists.posts.splice(index, 1)
     },
     addSinglePostToState(state, fullPost) {
         state.singlePost = fullPost
@@ -294,6 +341,11 @@ const mutations = {
     },
     updateEditingPostTitle(state, value) {
         state.editingPost.info.title = value
+    },
+    deleteAdminRequestFromState(state, value) {
+        state.allAdminRequests.forEach((request, i) => {
+            if (request.id === value) state.allAdminRequests.splice(i, 1)
+        })
     }
 }
 

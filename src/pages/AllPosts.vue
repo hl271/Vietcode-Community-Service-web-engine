@@ -13,11 +13,38 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </template>
 
 <script>
+import fb from '../firebase'
 export default {
+    created() {
+        const postsTimestampRef = fb.db().ref('posts_timestamp/')
+        postsTimestampRef.orderByValue().on('child_added', (data) => {
+            console.log('child_added')
+            console.log(data.val())
+            if (data.val() < 0) {
+                const newPost = {
+                    id: data.key,
+                    timestamp: data.val()
+                }
+                this.$store.dispatch('addFullPost', newPost)
+            }
+        })
+        postsTimestampRef.on('child_changed', (data) => {
+            console.log('child_changed')
+            if (data.val() < 0) {
+                let updatedPost = {
+                    timestamp: data.val(),
+                    id: data.key,
+                    updated: true
+                }
+                this.$store.dispatch('addFullPost', updatedPost)
+            }
+        })
+    },
     data() {
         return {
 
@@ -25,7 +52,7 @@ export default {
     },
     computed: {
         allPosts() {
-            return this.$store.state.allPosts
+            return this.$store.getters.allPosts
         }
     },
     filters: {

@@ -1,23 +1,7 @@
 <template>
     <div>
         <h1>Create New Post</h1>
-        <md-card id="display-image-holder">
-            <md-card-media-cover md-solid>
-                <md-card-media md-ratio="1:1">
-                <img :src="this.$store.state.newPost.displayImageFile|blobUrl" :alt="this.$store.state.newPost.displayImageFile.name">
-                </md-card-media>
-                <md-card-area>
-                <md-card-header>
-                    <span class="md-title">Post Image</span>
-                    <span class="md-subhead">{{this.$store.state.newPost.displayImageFile.name}}</span>
-                </md-card-header>
-                </md-card-area>
-            </md-card-media-cover>
-        </md-card>
-        <md-field >
-            <label>Post Image</label>
-            <md-file @change="handleFileUpload($event.target.files)" accept="image/*" />
-        </md-field>                
+        <image-uploader></image-uploader>                
 
         <md-field>
             <label>Post Title</label>
@@ -41,9 +25,11 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue'
+import ImageUploader from '@/components/ImageUploader'
 export default {
     components: {
-        'editor': Editor
+        'editor': Editor,
+        'image-uploader': ImageUploader
     },
     data: () => ({
         editorSettings: {

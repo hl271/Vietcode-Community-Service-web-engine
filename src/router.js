@@ -22,7 +22,6 @@ export const router = new VueRouter({
             path: '/posts',
             component: AllPosts,
             meta: {
-                needsAllPosts: true
             }
         },
         {
@@ -102,7 +101,8 @@ router.beforeEach((to, from, next) => {
         }
     }
     if (needsAllPosts) {
-        if (store.state.allPosts.length <= 0) {
+        console.log('needs all posts')
+        if (1 > 0) {
             const postsTimestampRef = fb.db().ref('posts_timestamp/')
             postsTimestampRef.orderByValue().on('child_added', (data) => {
                 console.log('child_added')

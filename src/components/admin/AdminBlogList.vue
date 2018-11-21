@@ -3,7 +3,7 @@
         <h1>All Posts</h1>
         <md-button @click="reload" class="md-primary md-raised">Reload</md-button>
         <div v-if="allPosts.length > 0">
-            <div v-for="post in allPostsReversed" :key="post.id">
+            <div v-for="post in allPosts" :key="post.id">
                 <md-card class="post md-elevation-3">
                     <md-card-header>
                         <md-card-header-text>
@@ -89,11 +89,9 @@ export default {
     },
     computed: {
         allPosts() {
-            return this.$store.state.allPosts
+            return this.$store.getters.allPosts
         },
-        allPostsReversed() {
-            return this.$store.state.allPosts.reverse()
-        },
+        
         editingPost() {
             return this.$store.state.editingPost
         },
