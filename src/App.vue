@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <transition>
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
-    </transition>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
@@ -12,6 +11,7 @@
 
 export default {
   name: 'App',
+
   
 }
 </script>

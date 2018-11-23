@@ -17,7 +17,7 @@
         <editor v-model.lazy="content" api-key="ntimow4eomwnxgr8suffbnxbgrnktocgahqje14eo1cyyd3g" :init="editorSettings"></editor>    
         <div v-html="content"></div>            
 
-        <md-button v-if="!this.$store.state.uploadPostStatus.toFirebaseDb.success" @click="submitPost" style="float: right; margin: 1rem 0" class="md-raised md-primary">Create New Post  <md-icon>send</md-icon></md-button>
+        <md-button v-if="!this.$store.state.uploadStatus.newPost.pending" @click="submitPost" style="float: right; margin: 1rem 0" class="md-raised md-primary">Create New Post  <md-icon>send</md-icon></md-button>
         <md-button @click="resetPost" style="float: right; margin: 1rem 0.5rem" class="md-raised md-accent">Reset</md-button>
 
     </div>

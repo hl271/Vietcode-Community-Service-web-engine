@@ -36,7 +36,6 @@ export default {
             let imageFile = this.$store.state.newPost.displayImageFile
             if (!!imageFile) {
                 let base64ImageFile = imageFile.toString('base64')
-                console.log(base64ImageFile)
                 return 'data:image/jpeg;base64,'+imageFile.toString('base64')
             }
             else return ''            
@@ -44,9 +43,7 @@ export default {
     },
     filters: { 
         blobURL(val) {
-            console.log(!val || !val.constructor || val.constructor !== File)
             if (!val || !val.constructor || val.constructor !== File) return ''
-            console.log(val)
             return URL.createObjectURL(val)
         }      
     }

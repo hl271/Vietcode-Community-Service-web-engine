@@ -3,6 +3,7 @@
         <div class="post-wrapper" v-if="singlePost !== null">
             
             <h1>{{singlePost.info.title}}</h1>
+            <h3>{{singlePost.info.short_description}}</h3>
             
             <div v-html="singlePost.content"></div>
         </div>

@@ -22,6 +22,7 @@ export const router = new VueRouter({
             path: '/posts',
             component: AllPosts,
             meta: {
+                keepAlive: true
             }
         },
         {
@@ -125,6 +126,10 @@ router.beforeEach((to, from, next) => {
                     }
                     store.dispatch('addFullPost', updatedPost)
                 }
+            })
+            postsTimestampRef.on('child_removed', snapshot => {
+                console.log('child_removed!')
+                store.dispatch('deletePostFromState', snapshot.key)
             })
         }        
     }

@@ -1,7 +1,6 @@
 <template>
     <div id="admin-blog-list">
         <h1>All Posts</h1>
-        <md-button @click="reload" class="md-primary md-raised">Reload</md-button>
         <div v-if="allPosts.length > 0">
             <div v-for="post in allPosts" :key="post.id">
                 <md-card class="post md-elevation-3">
@@ -18,7 +17,8 @@
                     </md-card-header>
 
                     <md-card-actions>
-                        <md-button class="md-accent">Delete</md-button>
+                        <!-- <md-progress-spinner class="md-accent"  md-mode="indeterminate" :md-diameter="30" :md-stroke="3"></md-progress-spinner> -->
+                        <md-button class="md-accent" @click="deletePost(post.id)">Delete</md-button>
                         <md-button class="md-primary" @click="editPost(post)">Edit</md-button>
                         <md-button>View Full Post</md-button>
                     </md-card-actions>
@@ -42,7 +42,8 @@
             </md-dialog-content>
             <md-dialog-actions>
                 <md-button class="md-primary" @click="closeEditingPost">Close</md-button>
-                <md-button class="md-primary">Save</md-button>
+                <md-progress-spinner v-if="this.$store.state.uploadStatus.editingPost.pending" md-mode="indeterminate" :md-diameter="30" :md-stroke="3"></md-progress-spinner>
+                <md-button class="md-primary" v-if="!this.$store.state.uploadStatus.editingPost.pending" @click="saveEditingPost">Save</md-button>
             </md-dialog-actions>
         </md-dialog>
     </div>
@@ -74,13 +75,18 @@ export default {
         }     
     }),
     methods: {
-        
+        saveEditingPost () {
+            this.$store.dispatch('saveEditingPostToServer')
+        },
         reload() {
             this.$forceUpdate()
         },
         editPost(post) {
             this.$store.commit('addEditingPostToState', post)
             this.showPostDialog = true
+        },
+        deletePost(postId) {
+            this.$store.dispatch('deletePostFromServer', postId)
         },
         closeEditingPost() {
             this.$store.commit('deleteEditingPostFromState')
@@ -94,6 +100,9 @@ export default {
         
         editingPost() {
             return this.$store.state.editingPost
+        },
+        storeExist() {
+            return !!this.$store
         },
         content: {
             get() {
