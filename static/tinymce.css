@@ -1,0 +1,13 @@
+p {
+    font-size: 20px;
+    line-height: 1.5em;
+    font-family: Georgia, 'Times New Roman', Times, serif
+}
+h1 {
+    font-size: 36px;
+    line-height: 1.25em;
+    font-family: Verdana, Tahoma, sans-serif
+}
+h2, h3, h4, h5, h6 {
+    font-family: Georgia, 'Times New Roman', Times, serif
+}

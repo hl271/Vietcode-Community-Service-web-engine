@@ -38,7 +38,8 @@
                     <md-textarea v-model.lazy="short_description" md-counter="80"></md-textarea>
                 </md-field>
                 <h2>Content</h2>
-                <editor v-model.lazy="content" api-key="ntimow4eomwnxgr8suffbnxbgrnktocgahqje14eo1cyyd3g" :init="editorSettings"></editor>
+                <!-- Tiny MCE Editor -->
+                <editor v-model="content" api-key="ntimow4eomwnxgr8suffbnxbgrnktocgahqje14eo1cyyd3g" :init="editorSettings"></editor> 
             </md-dialog-content>
             <md-dialog-actions>
                 <md-button class="md-primary" @click="closeEditingPost">Close</md-button>
@@ -52,6 +53,7 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue'
+import CustomEditor from '@/components/CustomEditor'
 export default {
     components: {
         'editor': Editor
@@ -64,15 +66,17 @@ export default {
             height: 500,
             menubar: false,
             plugins: [
-                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'advlist autolink lists link image charmap print preview anchor textcolor emoticons',
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table contextmenu paste code help wordcount'
             ],
-            toolbar: "insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat",
+            toolbar: "undo redo |  formatselect | bold italic underline strikethrough forecolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | blockquote | preview",
             content_css: [
-                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i'
-            ]
-        }     
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '/static/tinymce.css'
+            ],
+            theme: 'modern'
+        }    
     }),
     methods: {
         saveEditingPost () {

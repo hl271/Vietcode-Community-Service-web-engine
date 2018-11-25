@@ -62,6 +62,7 @@ const initialState = () => ({
     },
     lists: {
         posts: [],
+        newestPosts: [],
         adminReqs: []
     },
     allPosts: {},
@@ -83,6 +84,16 @@ const getters = {
     allPosts: state => {
         let posts = []
         state.lists.posts.forEach((postId, i) => {
+            if (postId in state.allPosts) {
+                let post = state.allPosts[postId]
+                posts.push(post)
+            }
+        })
+        return posts
+    },
+    newestPosts: state => {
+        let posts = []
+        state.lists.newestPosts.forEach((postId, i) => {
             if (postId in state.allPosts) {
                 let post = state.allPosts[postId]
                 posts.push(post)
@@ -219,7 +230,8 @@ const actions = {
         if (!!newPost.updated) {
             dispatch('checkIfPostIsNew', newPost.id)
         }
-        else if (newPost.singlePost === undefined) commit('addPostIdToState', {postId: newPost.id, unshift: false})
+        else if (!!newPost.newestPost) commit('addPostIdToNewestPostState', {postId: newPost.id, unshift: false})
+        else if (!newPost.singlePost) commit('addPostIdToState', {postId: newPost.id, unshift: false})
         const displayImageRef = fb.storage().ref('display_images/')
         const fullPost = {
             info: '',
@@ -390,6 +402,10 @@ const mutations = {
     addPostIdToState(state, {postId, unshift}) {
         if (!!unshift) state.lists.posts.unshift(postId)
         else state.lists.posts.push(postId)
+    },
+    addPostIdToNewestPostState(state, {postId, unshift}) {
+        if (!!unshift) state.lists.newestPosts.unshift(postId)
+        else state.lists.newestPosts.push(postId)
     },
     addFullPostToState(state, fullPost) {
         console.log('Add FULL PoST to state')

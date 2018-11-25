@@ -14,8 +14,8 @@
         </md-field>
 
         <h3>Content</h3>
-        <editor v-model.lazy="content" api-key="ntimow4eomwnxgr8suffbnxbgrnktocgahqje14eo1cyyd3g" :init="editorSettings"></editor>    
-        <div v-html="content"></div>            
+        <!-- Tiny MCE Editor -->
+        <editor v-model="content" api-key="ntimow4eomwnxgr8suffbnxbgrnktocgahqje14eo1cyyd3g" :init="editorSettings"></editor>    
 
         <md-button v-if="!this.$store.state.uploadStatus.newPost.pending" @click="submitPost" style="float: right; margin: 1rem 0" class="md-raised md-primary">Create New Post  <md-icon>send</md-icon></md-button>
         <md-button @click="resetPost" style="float: right; margin: 1rem 0.5rem" class="md-raised md-accent">Reset</md-button>
@@ -25,6 +25,7 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue'
+import CustomEditor from '@/components/CustomEditor'
 import ImageUploader from '@/components/ImageUploader'
 export default {
     components: {
@@ -36,14 +37,16 @@ export default {
             height: 500,
             menubar: false,
             plugins: [
-                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'advlist autolink lists link image charmap print preview anchor textcolor emoticons',
                 'searchreplace visualblocks code fullscreen',
                 'insertdatetime media table contextmenu paste code help wordcount'
             ],
-            toolbar: "insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat",
+            toolbar: "undo redo |  formatselect | bold italic underline strikethrough forecolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | blockquote | preview",
             content_css: [
-                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i'
-            ]
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '/static/tinymce.css'
+            ],
+            theme: 'modern'
         }       
     }),
     methods: {
@@ -100,6 +103,7 @@ export default {
       max-width: 200px;
       margin: 10px auto;
   }
+
 </style>
 
 

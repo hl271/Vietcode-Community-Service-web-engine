@@ -16,7 +16,10 @@ export const router = new VueRouter({
     routes: [
         {
             path: '/',
-            component: LandingPage
+            component: LandingPage,
+            meta: {
+                keepAlive: true
+            }
         },
         {
             path: '/posts',

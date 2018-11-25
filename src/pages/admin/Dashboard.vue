@@ -76,6 +76,7 @@ import Editor from '@tinymce/tinymce-vue'
 import CreateNewPost from '@/components/admin/CreateNewPost'
 import AdminBlogList from '@/components/admin/AdminBlogList'
 import AdminRequestList from '@/components/admin/AdminRequestList'
+
 export default {
     components: {
         'editor': Editor,
@@ -118,10 +119,8 @@ export default {
 }
 </script>
 
-<style scoped>
-  /* @import 'vue-material/dist/vue-material.min.css';
-  @import 'vue-material/dist/theme/default.css'; */
-</style>
+<style src="vue-material/dist/vue-material.min.css"></style>
+<style src="vue-material/dist/theme/default.css"></style>
 
 <style lang="css" scoped>
   .md-app {

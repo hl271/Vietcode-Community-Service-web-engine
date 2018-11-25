@@ -1,0 +1,8 @@
+body {
+    margin: 0;
+    font-family: Verdana, Tahoma, sans-serif
+}
+.container {
+    margin: 1rem 12%;
+    overflow: auto;
+}
